@@ -1,0 +1,41 @@
+#!/usr/bin/env ruby
+
+require 'git'
+puts "starting..............."
+
+Dir.glob('*').select do |directory| 
+
+  next unless File.directory? directory
+  next unless Dir.exists?(File.join directory, '.git')
+
+  g = Git.open directory
+
+  puts "Pulling #{g.current_branch} for #{g.repo}"
+
+  begin
+    putes g.pull g.repo, g.current_branch
+  rescue StandardError => e
+    puts e
+  end
+end
+=begin
+
+
+
+
+
+
+c  ""   )
+  l  "0       true^J
+  l  "1   ^J
+  l  "2     # # changed = g.status.changed^J  # # pp changed.inspect^J  #^J  # # pp changed.a
+  l  "3   # Dir.chdir('/Users/joate3/Projects')^J
+  l  "4       true^J
+  l  "5     pp ""^J
+  l  "6     pp "#{f}, #{File.directory? git_dir}"^J
+  l  "7     pp 'done pulling'^J
+  l  "8   ^J
+  l  "9     pp 'done pulling'^J
+  c  "-   ):
+  kjpp "#{f}, #{File.directory? git_dir}"
+=end
