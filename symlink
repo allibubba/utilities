@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+count = 0
+Dir.glob('*').select do |file|
+  next if File.join('/usr/local/bin', file)
+  count += 1
+
+  puts "creating symlink for #{file}"
+ `ln -s $PWD/#{file} /usr/local/bin`
+end
+
+if count == 0
+  puts 'no new symlinks created'
+else
+  puts 'done'
+end
