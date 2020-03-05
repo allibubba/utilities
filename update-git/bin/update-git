@@ -1,0 +1,33 @@
+#!/usr/bin/env ruby
+
+require 'git'
+require 'colorize'
+
+puts "starting..............."
+
+DEFAULT_BRANCHES = %w[master develop]
+
+Dir.glob('*').select do |directory| 
+  puts "\ndirectory? #{File.directory? directory}, git exists? #{Dir.exists? File.join(directory, '.git')}".yellow
+  next unless Dir.exists? File.join(directory, '.git')
+
+  g = Git.open directory
+  current_branch = g.current_branch
+  available_branches = g.branches.local.map(&:name)
+
+  raise 'no master or develop branch' if available_branches.none? do |branch|
+    DEFAULT_BRANCHES.include? branch
+  end
+
+  update_branch = available_branches.include?('master') ? 'master' : 'develop'
+  g.branch(update_branch).checkout
+
+  puts "Pulling #{g.current_branch} for #{g.repo}"
+
+  begin
+    puts g.pull g.remote, update_branch
+    g.branch(current_branch).checkout
+  rescue StandardError => e
+    puts e
+  end
+end
